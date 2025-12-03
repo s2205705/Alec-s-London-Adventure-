@@ -4,699 +4,536 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alec's London Adventure</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        :root {
-            --light-blue: #6ec6ff;
-            --deep-purple: #3a006e;
-            --dark-bg: #0a0014;
-            --accent: #ff0066;
-            --text-light: #f0f0f0;
-            --shadow: rgba(106, 0, 255, 0.3);
-        }
-
+        
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(110, 198, 255, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(58, 0, 110, 0.1) 0%, transparent 20%);
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-
+        
+        /* Floating swords background */
+        .sword {
+            position: absolute;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px rgba(100, 255, 218, 0.3));
+        }
+        
+        /* Container for main content */
         .container {
-            max-width: 1200px;
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-
-        /* Header Styles */
+        
+        /* Header with glowing text */
         header {
             text-align: center;
-            padding: 30px 0;
+            padding: 40px 20px;
+            margin-bottom: 40px;
             position: relative;
         }
-
-        .header-content {
+        
+        .title-container {
+            position: relative;
             display: inline-block;
-            position: relative;
         }
-
+        
         h1 {
-            font-size: 3.5rem;
+            font-size: 4.5rem;
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--light-blue);
-            text-shadow: 0 0 15px var(--light-blue);
-            position: relative;
-            z-index: 2;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            animation: titleGlow 3s ease-in-out infinite alternate;
         }
-
+        
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 107, 107, 0.2); }
+            100% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 107, 107, 0.4), 0 0 80px rgba(78, 205, 196, 0.3); }
+        }
+        
         .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 20px;
-            font-weight: 300;
-            letter-spacing: 2px;
+            font-size: 1.3rem;
+            color: #a0e7ff;
+            font-style: italic;
+            margin-top: 10px;
+            text-shadow: 0 0 10px rgba(160, 231, 255, 0.5);
         }
-
-        /* Knife Frame Decoration */
-        .knife-frame {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .knife {
-            position: absolute;
-            width: 30px;
-            height: 120px;
-            background: linear-gradient(45deg, var(--light-blue), var(--deep-purple));
-            clip-path: polygon(0% 0%, 100% 15%, 85% 100%, 15% 85%);
-            transform: rotate(45deg);
-            box-shadow: 0 0 15px var(--accent);
-            opacity: 0.7;
-        }
-
-        .knife-1 { top: -40px; left: -40px; }
-        .knife-2 { top: -40px; right: -40px; transform: rotate(135deg); }
-        .knife-3 { bottom: -40px; left: -40px; transform: rotate(-45deg); }
-        .knife-4 { bottom: -40px; right: -40px; transform: rotate(225deg); }
-
-        /* Gallery Styles */
-        .gallery-container {
-            margin: 40px 0;
-            position: relative;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .picture-frame {
-            position: relative;
-            height: 300px;
-            background-color: var(--deep-purple);
-            border-radius: 5px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .picture-frame:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 15px 30px var(--shadow);
-        }
-
-        .picture-frame::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, transparent 60%, rgba(110, 198, 255, 0.1) 100%);
-            z-index: 1;
-        }
-
-        /* Knife corners for pictures */
-        .knife-corner {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            background: var(--accent);
-            clip-path: polygon(0% 0%, 100% 0%, 100% 30%, 30% 100%, 0% 100%);
-            z-index: 2;
-        }
-
-        .top-left { top: 10px; left: 10px; }
-        .top-right { top: 10px; right: 10px; transform: rotate(90deg); }
-        .bottom-left { bottom: 10px; left: 10px; transform: rotate(-90deg); }
-        .bottom-right { bottom: 10px; right: 10px; transform: rotate(180deg); }
-
-        .picture-number {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: var(--deep-purple);
-            color: var(--light-blue);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            z-index: 3;
-            border: 2px solid var(--light-blue);
-        }
-
-        .picture-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .picture-frame:hover .picture-img {
-            transform: scale(1.1);
-        }
-
-        .picture-title {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to top, rgba(58, 0, 110, 0.9), transparent);
-            z-index: 3;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        /* Selected Image View */
-        .selected-view {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(10, 0, 20, 0.95);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .selected-view.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .selected-img {
-            max-width: 80%;
-            max-height: 70vh;
-            border: 15px solid transparent;
-            border-image: linear-gradient(45deg, var(--light-blue), var(--deep-purple)) 1;
-            box-shadow: 0 0 40px var(--accent);
-            margin-bottom: 30px;
-        }
-
-        .selected-title {
-            font-size: 2.5rem;
-            color: var(--light-blue);
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .selected-desc {
-            max-width: 600px;
-            text-align: center;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #ccc;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .close-btn:hover {
-            transform: rotate(90deg) scale(1.1);
-            background-color: var(--light-blue);
-        }
-
-        /* Location Indicator */
-        .location-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(58, 0, 110, 0.8);
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            z-index: 3;
-            border-left: 3px solid var(--accent);
-        }
-
-        /* Controls */
+        
+        /* Control panel */
         .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-
-        .btn {
+        
+        .shape-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .shape-btn {
+            background: rgba(26, 26, 46, 0.8);
+            color: #a0e7ff;
+            border: 2px solid #4ecdc4;
+            border-radius: 50px;
             padding: 12px 25px;
-            background: linear-gradient(to right, var(--light-blue), var(--deep-purple));
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;
+            font-family: 'Cinzel';
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        .btn:hover {
+        
+        .shape-btn:hover {
+            background: #4ecdc4;
+            color: #0c0c0c;
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px var(--shadow);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
         }
-
+        
+        .shape-btn.active {
+            background: #ff6b6b;
+            color: #0c0c0c;
+            border-color: #ff6b6b;
+        }
+        
+        /* Floating images container */
+        .floating-gallery {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            margin: 50px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        
+        .adventure-image {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: transform 0.5s ease, box-shadow 0.3s ease;
+            z-index: 5;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4) border-box;
+        }
+        
+        .adventure-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .adventure-image:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.4);
+            z-index: 100;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4) border-box;
+        }
+        
+        .image-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: #ffd700;
+            padding: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .adventure-image:hover .image-label {
+            opacity: 1;
+        }
+        
         /* Footer */
         footer {
             text-align: center;
-            padding: 30px 0;
+            padding: 30px;
             margin-top: 50px;
-            border-top: 1px solid rgba(110, 198, 255, 0.2);
-            color: #aaa;
-            font-size: 0.9rem;
+            color: #a0e7ff;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
         }
-
+        
+        .adventure-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-top: 20px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4) border-box;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+        }
+        
+        .modal-caption {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ff6b6b;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #ffd700;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
             }
             
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
+            .floating-gallery {
+                height: 60vh;
             }
             
-            .picture-frame {
-                height: 250px;
-            }
-            
-            .selected-img {
-                max-width: 95%;
-            }
-            
-            .selected-title {
-                font-size: 1.8rem;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 80%;
-                max-width: 300px;
+            .adventure-image {
+                width: 150px;
+                height: 120px;
             }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Floating swords -->
+    <div class="sword" id="sword1" style="top: 10%; left: 5%; transform: rotate(45deg);">⚔️</div>
+    <div class="sword" id="sword2" style="top: 20%; right: 10%; transform: rotate(-20deg);">🗡️</div>
+    <div class="sword" id="sword3" style="bottom: 15%; left: 15%; transform: rotate(120deg);">⚔️</div>
+    <div class="sword" id="sword4" style="bottom: 30%; right: 5%; transform: rotate(-80deg);">🗡️</div>
+    <div class="sword" id="sword5" style="top: 40%; left: 10%; transform: rotate(200deg);">⚔️</div>
+    
     <div class="container">
         <header>
-            <div class="header-content">
-                <div class="knife-frame">
-                    <div class="knife knife-1"></div>
-                    <div class="knife knife-2"></div>
-                    <div class="knife knife-3"></div>
-                    <div class="knife knife-4"></div>
-                </div>
+            <div class="title-container">
                 <h1>Alec's London Adventure</h1>
-                <p class="subtitle">An edgy exploration through London's iconic locations</p>
+                <div class="subtitle">Where memories take shape and stories come alive</div>
             </div>
         </header>
-
-        <main>
-            <div class="gallery-container">
-                <p style="text-align: center; max-width: 800px; margin: 0 auto; line-height: 1.6; color: #ccc;">
-                    From historic landmarks to hidden gems, follow Alec's journey through London's most iconic spots. 
-                    Each location tells a unique story of urban exploration and discovery.
-                </p>
-                
-                <div class="gallery-grid" id="gallery">
-                    <!-- Gallery items will be generated by JavaScript -->
-                </div>
-                
-                <div class="controls">
-                    <button class="btn" id="shuffleBtn">
-                        <i class="fas fa-random"></i> Shuffle Adventure
-                    </button>
-                    <button class="btn" id="themeBtn">
-                        <i class="fas fa-palette"></i> Toggle Theme
-                    </button>
-                    <button class="btn" id="storyBtn">
-                        <i class="fas fa-book"></i> Alec's Story
-                    </button>
-                </div>
+        
+        <div class="controls">
+            <h3 style="text-align: center; color: #ffd700; margin-bottom: 20px;">Transform the Adventure</h3>
+            <div class="shape-buttons">
+                <button class="shape-btn active" data-shape="circle">Circle Formation</button>
+                <button class="shape-btn" data-shape="diamond">Diamond Pattern</button>
+                <button class="shape-btn" data-shape="sword">Sword Formation</button>
+                <button class="shape-btn" data-shape="spiral">Spiral Flow</button>
+                <button class="shape-btn" data-shape="random">Chaotic Adventure</button>
+                <button class="shape-btn" data-shape="london">London Eye</button>
             </div>
-        </main>
-
+            <p style="text-align: center; margin-top: 15px; color: #a0e7ff; font-size: 0.9rem;">Click images to enlarge • Hover for details</p>
+        </div>
+        
+        <div class="floating-gallery" id="gallery">
+            <!-- Adventure images will be placed here by JavaScript -->
+        </div>
+        
         <footer>
-            <p>Alec's London Adventure &copy; 2023 | Exploring the city's iconic and hidden locations</p>
-            <p style="margin-top: 10px;">All images are artistic representations of London's landmarks</p>
+            <p>⚔️ Alec's Epic Journey Through London ⚔️</p>
+            <div class="adventure-quote">
+                "Not all those who wander are lost, but Alec definitely took a few wrong turns in Camden."
+            </div>
         </footer>
     </div>
-
-    <!-- Selected Image View -->
-    <div class="selected-view" id="selectedView">
-        <div class="close-btn" id="closeBtn">
-            <i class="fas fa-times"></i>
-        </div>
-        <img class="selected-img" id="selectedImg" src="" alt="Selected Image">
-        <h2 class="selected-title" id="selectedTitle">Image Title</h2>
-        <p class="selected-desc" id="selectedDesc">Image description will appear here.</p>
-        <div class="location-info" id="locationInfo">Location details here</div>
+    
+    <!-- Modal for full-size images -->
+    <div class="modal" id="imageModal">
+        <div class="close-modal" id="closeModal">&times;</div>
+        <img class="modal-content" id="modalImage">
+        <div class="modal-caption" id="modalCaption"></div>
     </div>
-
-    <!-- Story Modal -->
-    <div class="selected-view" id="storyModal">
-        <div class="close-btn" id="closeStoryBtn">
-            <i class="fas fa-times"></i>
-        </div>
-        <div style="max-width: 700px; padding: 30px; background: rgba(58, 0, 110, 0.2); border-radius: 10px; border: 1px solid rgba(110, 198, 255, 0.2);">
-            <h2 style="color: var(--light-blue); margin-bottom: 20px; text-align: center;">Alec's London Story</h2>
-            <p style="margin-bottom: 15px; line-height: 1.6; color: #ccc;">
-                Alec arrived in London as a university student, wide-eyed and ready to explore every corner of this historic city. 
-                His adventure began at the university campus, where he met friends from around the world who would join him on his explorations.
-            </p>
-            <p style="margin-bottom: 15px; line-height: 1.6; color: #ccc;">
-                From studying at the library to late-night walks across London Bridge, Alec discovered that the city had layers upon layers 
-                of history and culture. He'd spend weekends getting lost in Central London, discovering hidden gems between the major landmarks.
-            </p>
-            <p style="margin-bottom: 15px; line-height: 1.6; color: #ccc;">
-                The Natural History Museum became his favorite study spot, where he'd write essays surrounded by dinosaurs. 
-                Liverpool Street station marked the beginning of countless adventures, while Bermondsey Street showed him London's 
-                creative side with its independent shops and cafes.
-            </p>
-            <p style="margin-bottom: 15px; line-height: 1.6; color: #ccc;">
-                His most breathtaking discovery was Horizon 22, where he saw London from heights he'd never imagined. 
-                Each location in this gallery represents a chapter in Alec's ongoing London adventure.
-            </p>
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn" id="closeStoryBtn2" style="background: linear-gradient(to right, var(--accent), #ff4d94);">
-                    Continue Adventure
-                </button>
-            </div>
-        </div>
-    </div>
-
+    
     <script>
-        // London adventure image data - Updated with requested locations
-        const londonImages = [
-            {
-                id: 1,
-                title: "London Bridge at Dusk",
-                desc: "The iconic London Bridge illuminated against the twilight sky, connecting the city's history with its vibrant present.",
-                location: "London Bridge, SE1",
-                color: "#4a148c"
-            },
-            {
-                id: 2,
-                title: "Natural History Museum Hall",
-                desc: "The breathtaking Hintze Hall with the giant blue whale skeleton, where nature's wonders meet architectural grandeur.",
-                location: "Cromwell Road, SW7",
-                color: "#311b92"
-            },
-            {
-                id: 3,
-                title: "Central London Pulse",
-                desc: "The electric energy of Central London where historic buildings stand alongside modern skyscrapers.",
-                location: "Westminster, W1",
-                color: "#1a237e"
-            },
-            {
-                id: 4,
-                title: "Liverpool Street Hub",
-                desc: "The bustling heart of London's financial district, where centuries of commerce converge.",
-                location: "Liverpool Street, EC2",
-                color: "#0d47a1"
-            },
-            {
-                id: 5,
-                title: "Bermondsey Street Vibe",
-                desc: "The creative soul of Bermondsey with its independent galleries, vintage shops, and street art.",
-                location: "Bermondsey Street, SE1",
-                color: "#01579b"
-            },
-            {
-                id: 6,
-                title: "Horizon 22 View",
-                desc: "London's highest free viewing platform, offering breathtaking panoramic views of the entire city.",
-                location: "22 Bishopsgate, EC2",
-                color: "#006064"
-            },
-            {
-                id: 7,
-                title: "University Life",
-                desc: "Alec's university campus where his London adventure began, blending study with urban exploration.",
-                location: "University Campus, London",
-                color: "#004d40"
-            },
-            {
-                id: 8,
-                title: "London Bridge Shadows",
-                desc: "The underbelly of London Bridge, where sharp angles and industrial architecture create dramatic shadows.",
-                location: "London Bridge, SE1",
-                color: "#1b5e20"
-            },
-            {
-                id: 9,
-                title: "Museum at Night",
-                desc: "The Natural History Museum after hours, when the dinosaur exhibits take on a mysterious atmosphere.",
-                location: "South Kensington, SW7",
-                color: "#33691e"
-            },
-            {
-                id: 10,
-                title: "Central London Neon",
-                desc: "Piccadilly Circus and Leicester Square after dark, where neon lights paint the streets in vibrant colors.",
-                location: "West End, W1",
-                color: "#827717"
-            },
-            {
-                id: 11,
-                title: "Financial District Edge",
-                desc: "The sharp, angular architecture of London's financial district, reflecting the city's cutting-edge ambition.",
-                location: "City of London, EC2",
-                color: "#f57f17"
-            },
-            {
-                id: 12,
-                title: "University to City",
-                desc: "The journey from campus life to the heart of the city, where student life meets urban exploration.",
-                location: "Across London",
-                color: "#ff6f00"
-            }
+        // Adventure image data
+        const adventureImages = [
+            { src: "Screenshot_20251203_183607_Gallery.jpg", title: "The Journey Begins", desc: "First steps into the unknown" },
+            { src: "Screenshot_20251203_183630_Gallery.jpg", title: "London Calling", desc: "Answering the city's call" },
+            { src: "Screenshot_20251203_183701_Gallery.jpg", title: "Street Discoveries", desc: "Hidden gems around every corner" },
+            { src: "Screenshot_20251203_183740_Gallery.jpg", title: "Urban Exploration", desc: "Navigating the concrete jungle" },
+            { src: "Screenshot_20251203_183816_Gallery.jpg", title: "Moment of Wonder", desc: "London's magic revealed" },
+            { src: "Screenshot_20251203_183842_Gallery.jpg", title: "Path Less Traveled", desc: "Off the beaten track" },
+            { src: "Screenshot_20251203_183851_Gallery.jpg", title: "Adventure's End", desc: "But the story continues..." }
         ];
 
-        // Generate gallery items
+        // Get DOM elements
         const gallery = document.getElementById('gallery');
-        const selectedView = document.getElementById('selectedView');
-        const selectedImg = document.getElementById('selectedImg');
-        const selectedTitle = document.getElementById('selectedTitle');
-        const selectedDesc = document.getElementById('selectedDesc');
-        const locationInfo = document.getElementById('locationInfo');
-        const closeBtn = document.getElementById('closeBtn');
-        const shuffleBtn = document.getElementById('shuffleBtn');
-        const themeBtn = document.getElementById('themeBtn');
-        const storyBtn = document.getElementById('storyBtn');
-        const storyModal = document.getElementById('storyModal');
-        const closeStoryBtn = document.getElementById('closeStoryBtn');
-        const closeStoryBtn2 = document.getElementById('closeStoryBtn2');
+        const shapeButtons = document.querySelectorAll('.shape-btn');
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+        const closeModal = document.getElementById('closeModal');
+        const swords = document.querySelectorAll('.sword');
 
-        // Function to generate image URL based on ID (using placeholder service)
-        function getImageUrl(id, color, title) {
-            // Using a placeholder service with our color scheme
-            const encodedTitle = encodeURIComponent(title.split(' ')[0]);
-            return `https://placehold.co/600x400/${color.replace('#', '')}/ffffff?text=${encodedTitle}+${id}&font=montserrat`;
-        }
-
-        // Render gallery
-        function renderGallery() {
+        // Initialize images in the gallery
+        function initializeGallery() {
             gallery.innerHTML = '';
-            londonImages.forEach(image => {
-                const frame = document.createElement('div');
-                frame.className = 'picture-frame';
-                frame.innerHTML = `
-                    <div class="knife-corner top-left"></div>
-                    <div class="knife-corner top-right"></div>
-                    <div class="knife-corner bottom-left"></div>
-                    <div class="knife-corner bottom-right"></div>
-                    <div class="picture-number">${image.id}</div>
-                    <img class="picture-img" src="${getImageUrl(image.id, image.color, image.title)}" alt="${image.title}">
-                    <div class="picture-title">${image.title}</div>
-                    <div class="location-info">${image.location}</div>
+            adventureImages.forEach((img, index) => {
+                const imgElement = document.createElement('div');
+                imgElement.className = 'adventure-image';
+                imgElement.dataset.index = index;
+                
+                imgElement.innerHTML = `
+                    <img src="${img.src}" alt="${img.title}">
+                    <div class="image-label">${img.title}</div>
                 `;
                 
-                frame.addEventListener('click', () => {
-                    selectedImg.src = getImageUrl(image.id, image.color, image.title);
-                    selectedTitle.textContent = image.title;
-                    selectedDesc.textContent = image.desc;
-                    locationInfo.textContent = `📍 ${image.location}`;
-                    selectedView.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+                // Add click event to open modal
+                imgElement.addEventListener('click', () => openModal(img.src, img.title, img.desc));
+                
+                gallery.appendChild(imgElement);
+            });
+            
+            // Start with circle formation
+            arrangeInShape('circle');
+        }
+
+        // Shape arrangements
+        function arrangeInShape(shape) {
+            const images = document.querySelectorAll('.adventure-image');
+            const centerX = gallery.offsetWidth / 2;
+            const centerY = gallery.offsetHeight / 2;
+            const radius = Math.min(centerX, centerY) * 0.7;
+            
+            images.forEach((img, index) => {
+                let x, y, rotation;
+                
+                switch(shape) {
+                    case 'circle':
+                        const angle = (index / images.length) * Math.PI * 2;
+                        x = centerX + Math.cos(angle) * radius - 100;
+                        y = centerY + Math.sin(angle) * radius - 75;
+                        rotation = angle * (180/Math.PI);
+                        break;
+                        
+                    case 'diamond':
+                        const diamondAngle = (index / images.length) * Math.PI * 2;
+                        x = centerX + Math.cos(diamondAngle) * radius * Math.abs(Math.cos(diamondAngle)) - 100;
+                        y = centerY + Math.sin(diamondAngle) * radius * Math.abs(Math.sin(diamondAngle)) - 75;
+                        rotation = diamondAngle * (180/Math.PI);
+                        break;
+                        
+                    case 'sword':
+                        if (index === 0) {
+                            x = centerX - 100;
+                            y = centerY - 150;
+                            rotation = 0;
+                        } else if (index === 1) {
+                            x = centerX - 100;
+                            y = centerY - 50;
+                            rotation = 0;
+                        } else if (index === 2) {
+                            x = centerX - 100;
+                            y = centerY + 50;
+                            rotation = 0;
+                        } else if (index === 3) {
+                            x = centerX + 50;
+                            y = centerY - 100;
+                            rotation = 90;
+                        } else if (index === 4) {
+                            x = centerX + 50;
+                            y = centerY;
+                            rotation = 90;
+                        } else if (index === 5) {
+                            x = centerX + 50;
+                            y = centerY + 100;
+                            rotation = 90;
+                        } else {
+                            x = centerX + 200;
+                            y = centerY - 50;
+                            rotation = 45;
+                        }
+                        break;
+                        
+                    case 'spiral':
+                        const spiralAngle = index * 0.8;
+                        const spiralRadius = 50 + index * 30;
+                        x = centerX + Math.cos(spiralAngle) * spiralRadius - 100;
+                        y = centerY + Math.sin(spiralAngle) * spiralRadius - 75;
+                        rotation = spiralAngle * (180/Math.PI);
+                        break;
+                        
+                    case 'london':
+                        const londonAngle = (index / images.length) * Math.PI * 2;
+                        x = centerX + Math.cos(londonAngle) * (radius * 0.8) - 100;
+                        y = centerY + Math.sin(londonAngle) * (radius * 0.5) - 75;
+                        rotation = londonAngle * (180/Math.PI) + 90;
+                        break;
+                        
+                    case 'random':
+                    default:
+                        x = Math.random() * (gallery.offsetWidth - 200);
+                        y = Math.random() * (gallery.offsetHeight - 150);
+                        rotation = Math.random() * 360 - 180;
+                        break;
+                }
+                
+                // Apply transformation with animation
+                img.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                img.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+            });
+        }
+
+        // Animate floating swords
+        function animateSwords() {
+            swords.forEach((sword, index) => {
+                // Random floating animation
+                const floatY = Math.sin(Date.now() / 2000 + index) * 20;
+                const floatX = Math.cos(Date.now() / 2500 + index) * 15;
+                const rotation = Math.sin(Date.now() / 3000 + index) * 10;
+                
+                sword.style.transform = `translate(${floatX}px, ${floatY}px) rotate(${rotation + (index * 45)}deg)`;
+            });
+            
+            requestAnimationFrame(animateSwords);
+        }
+
+        // Open modal with clicked image
+        function openModal(src, title, desc) {
+            modalImage.src = src;
+            modalCaption.textContent = `${title}: ${desc}`;
+            modal.style.display = 'flex';
+        }
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside image
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Shape button event listeners
+        shapeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                shapeButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                // Arrange images in selected shape
+                arrangeInShape(button.dataset.shape);
+            });
+        });
+
+        // Auto-cycle through shapes every 10 seconds
+        let currentShapeIndex = 0;
+        const shapes = ['circle', 'diamond', 'sword', 'spiral', 'london', 'random'];
+        
+        function autoCycleShapes() {
+            currentShapeIndex = (currentShapeIndex + 1) % shapes.length;
+            const nextShape = shapes[currentShapeIndex];
+            
+            // Update active button
+            shapeButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.shape === nextShape) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            arrangeInShape(nextShape);
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            initializeGallery();
+            animateSwords();
+            
+            // Start auto-cycling shapes
+            setInterval(autoCycleShapes, 10000);
+            
+            // Add some floating animation to images
+            setInterval(() => {
+                const images = document.querySelectorAll('.adventure-image:not(:hover)');
+                images.forEach((img, index) => {
+                    const floatY = Math.sin(Date.now() / 3000 + index) * 5;
+                    const floatX = Math.cos(Date.now() / 3500 + index) * 5;
+                    
+                    const currentTransform = img.style.transform;
+                    const newTransform = currentTransform.replace(/translate\([^)]+\)/, 
+                        `translate(${parseFloat(img.style.transform.match(/translate\(([^,]+)/)?.[1] || 0) + floatX}px, ${parseFloat(img.style.transform.match(/translate\([^,]+,\s*([^)px]+)/)?.[1] || 0) + floatY}px)`);
+                    
+                    img.style.transition = 'transform 3s linear';
+                    img.style.transform = newTransform;
                 });
-                
-                gallery.appendChild(frame);
-            });
-        }
-
-        // Shuffle gallery function
-        function shuffleGallery() {
-            for (let i = londonImages.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [londonImages[i], londonImages[j]] = [londonImages[j], londonImages[i]];
-            }
-            renderGallery();
-            
-            // Add visual feedback
-            shuffleBtn.innerHTML = '<i class="fas fa-check"></i> Adventure Shuffled!';
-            setTimeout(() => {
-                shuffleBtn.innerHTML = '<i class="fas fa-random"></i> Shuffle Adventure';
-            }, 1500);
-        }
-
-        // Toggle theme intensity
-        let intenseTheme = true;
-        function toggleTheme() {
-            const root = document.documentElement;
-            if (intenseTheme) {
-                root.style.setProperty('--light-blue', '#8ed4ff');
-                root.style.setProperty('--deep-purple', '#5a1a9e');
-                root.style.setProperty('--accent', '#ff4d94');
-                themeBtn.innerHTML = '<i class="fas fa-moon"></i> Darker Theme';
-            } else {
-                root.style.setProperty('--light-blue', '#6ec6ff');
-                root.style.setProperty('--deep-purple', '#3a006e');
-                root.style.setProperty('--accent', '#ff0066');
-                themeBtn.innerHTML = '<i class="fas fa-palette"></i> Toggle Theme';
-            }
-            intenseTheme = !intenseTheme;
-        }
-
-        // Show story modal
-        function showStory() {
-            storyModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close story modal
-        function closeStory() {
-            storyModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Event listeners
-        closeBtn.addEventListener('click', () => {
-            selectedView.classList.remove('active');
-            document.body.style.overflow = 'auto';
+            }, 50);
         });
 
-        selectedView.addEventListener('click', (e) => {
-            if (e.target === selectedView) {
-                selectedView.classList.remove('active');
-                document.body.style.overflow = 'auto';
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const activeButton = document.querySelector('.shape-btn.active');
+            if (activeButton) {
+                arrangeInShape(activeButton.dataset.shape);
             }
-        });
-
-        shuffleBtn.addEventListener('click', shuffleGallery);
-        themeBtn.addEventListener('click', toggleTheme);
-        storyBtn.addEventListener('click', showStory);
-        closeStoryBtn.addEventListener('click', closeStory);
-        closeStoryBtn2.addEventListener('click', closeStory);
-        
-        storyModal.addEventListener('click', (e) => {
-            if (e.target === storyModal) {
-                closeStory();
-            }
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (selectedView.classList.contains('active')) {
-                    selectedView.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-                if (storyModal.classList.contains('active')) {
-                    closeStory();
-                }
-            }
-            
-            if (e.key === 's' || e.key === 'S') {
-                shuffleGallery();
-            }
-            
-            if (e.key === 't' || e.key === 'T') {
-                toggleTheme();
-            }
-        });
-
-        // Initialize gallery
-        renderGallery();
-        
-        // Add some dynamic knife animations
-        document.addEventListener('mousemove', (e) => {
-            const knives = document.querySelectorAll('.knife');
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            
-            knives.forEach((knife, index) => {
-                const speed = 0.5;
-                const xOffset = (x - 0.5) * 20 * speed;
-                const yOffset = (y - 0.5) * 20 * speed;
-                
-                switch(index) {
-                    case 0:
-                        knife.style.transform = `rotate(45deg) translate(${xOffset}px, ${yOffset}px)`;
-                        break;
-                    case 1:
-                        knife.style.transform = `rotate(135deg) translate(${-xOffset}px, ${yOffset}px)`;
-                        break;
-                    case 2:
-                        knife.style.transform = `rotate(-45deg) translate(${xOffset}px, ${-yOffset}px)`;
-                        break;
-                    case 3:
-                        knife.style.transform = `rotate(225deg) translate(${-xOffset}px, ${-yOffset}px)`;
-                        break;
-                }
-            });
         });
     </script>
 </body>
